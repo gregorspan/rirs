@@ -32,3 +32,22 @@ export async function createClient() {
     },
   );
 }
+
+/**
+ * Create an admin client with service role key for admin operations
+ * WARNING: This client has full access to the database. Use with caution.
+ */
+export function createAdminClient() {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return [];
+        },
+        setAll() {},
+      },
+    },
+  );
+}
