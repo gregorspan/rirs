@@ -2,7 +2,7 @@ export function Hero() {
   return (
     <div className="flex flex-col gap-16 items-center">
       <h1 className="text-4xl lg:text-5xl font-semibold text-center max-w-2xl">
-        Unlock your team&apos;s potential with the RIRS Training Platform
+        Unlock your team&apos;s potential with RIRS Training
       </h1>
       <p className="text-lg lg:text-xl text-muted-foreground text-center max-w-3xl">
         Create personalized learning paths, track progress in real time, and deliver engaging
