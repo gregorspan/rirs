@@ -138,6 +138,7 @@ export function TrainingSessionsList({ currentUserId }: { currentUserId: string 
       location: s.location,
       description: s.description,
       note: s.note,
+      image_url: s.image_url,
     })
     if (!error) await load()
   }
@@ -193,22 +194,33 @@ export function TrainingSessionsList({ currentUserId }: { currentUserId: string 
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                  <div className="flex flex-col">
-                    <div className="font-medium">
-                      {new Date(s.starts_at).toLocaleString()} • {s.location}
+                <div className="flex flex-col gap-3">
+                  {s.image_url && (
+                    <div className="w-full overflow-hidden rounded-md border">
+                      <img
+                        src={s.image_url}
+                        alt={`Training session at ${s.location}`}
+                        className="h-48 w-full object-cover"
+                        loading="lazy"
+                      />
                     </div>
-                    {s.description && (
-                      <div className="text-sm text-muted-foreground">{s.description}</div>
-                    )}
-                    {s.note && (
-                      <div className="text-xs text-muted-foreground">Note: {s.note}</div>
-                    )}
-                    {s.cancelled_at && (
-                      <div className="text-xs text-destructive">Cancelled</div>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
+                  )}
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                    <div className="flex flex-col">
+                      <div className="font-medium">
+                        {new Date(s.starts_at).toLocaleString()} • {s.location}
+                      </div>
+                      {s.description && (
+                        <div className="text-sm text-muted-foreground">{s.description}</div>
+                      )}
+                      {s.note && (
+                        <div className="text-xs text-muted-foreground">Note: {s.note}</div>
+                      )}
+                      {s.cancelled_at && (
+                        <div className="text-xs text-destructive">Cancelled</div>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
                     {isOwner(s) && (
                       <>
                         <Button size="sm" variant="outline" onClick={() => beginEdit(s)}>Edit</Button>
@@ -238,6 +250,7 @@ export function TrainingSessionsList({ currentUserId }: { currentUserId: string 
                     >
                       View attendees
                     </Button>
+                    </div>
                   </div>
                 </div>
               )}

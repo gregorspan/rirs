@@ -56,6 +56,8 @@ create table if not exists public.training_sessions (
   starts_at timestamptz not null,
   location text not null,
   description text,
+  note text,
+  image_url text,
   created_at timestamptz not null default now()
 );
 

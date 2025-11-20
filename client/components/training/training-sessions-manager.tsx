@@ -21,6 +21,35 @@ export type TrainingSession = {
   note: string | null
   cancelled_at: string | null
   created_at: string
+  image_url: string | null
+}
+
+const unsplashAccessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY
+
+async function fetchUnsplashImage(query: string) {
+  if (!unsplashAccessKey) return null
+
+  const search = query?.trim() || 'sports training'
+  const params = new URLSearchParams({
+    query: search,
+    orientation: 'landscape',
+    content_filter: 'high',
+  })
+
+  try {
+    const response = await fetch(`https://api.unsplash.com/photos/random?${params.toString()}`, {
+      headers: {
+        Authorization: `Client-ID ${unsplashAccessKey}`,
+        'Accept-Version': 'v1',
+      },
+    })
+
+    if (!response.ok) return null
+    const payload = await response.json()
+    return payload?.urls?.regular ?? payload?.urls?.full ?? payload?.urls?.small ?? null
+  } catch {
+    return null
+  }
 }
 
 export function TrainingSessionsManager() {
@@ -44,12 +73,14 @@ export function TrainingSessionsManager() {
     if (!startsAt || !location) return
     setSubmitting(true)
     try {
+      const imageUrl = await fetchUnsplashImage(description || location)
       const { error } = await supabase.from('training_sessions').insert({
         created_by: user.id,
         starts_at: new Date(startsAt).toISOString(),
         location,
         description: description || null,
         note: note || null,
+        image_url: imageUrl,
       })
       if (!error) {
         setStartsAt('')
